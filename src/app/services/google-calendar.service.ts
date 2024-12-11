@@ -23,7 +23,7 @@ declare global {
 })
 export class GoogleCalendarService {
   private CLIENT_ID = '776163066585-8lkr6dr5rgm1ick3p6i5cqcu4b5l6bbq.apps.googleusercontent.com';
-  private API_KEY = 'TU_API_KEY';
+  private API_KEY = 'AIzaSyAMEIgjG5FQwfwgfRMnG52HdfVzpIO7BRU';
   private DISCOVERY_DOCS = [
     'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
   ];
