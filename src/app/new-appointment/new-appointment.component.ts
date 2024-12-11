@@ -19,10 +19,7 @@ export class NewAppointmentComponent {
   constructor(private googleService: GoogleCalendarService) {}
 
   connectToGoogle() {
-    this.googleService.initializeGoogleAuth((token) => {
-      console.log('Token recibido:', token);
-      // Aquí puedes llamar a tus APIs con el token recibido.
-    });
+    this.googleService.initializeGoogleAuth();
   }
 
 }

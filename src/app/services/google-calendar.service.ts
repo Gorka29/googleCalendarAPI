@@ -11,16 +11,20 @@ export class GoogleCalendarService {
 
   constructor() {}
 
-  initializeGoogleAuth(callback: (token: string) => void): void {
-    google.accounts.id.initialize({
-      client_id: this.CLIENT_ID,
-      callback: (response: any) => {
-        this.token = response.credential;
-        console.log('Token obtenido:', this.token);
-        callback(this.token);
-      },
-    });
+  initializeGoogleAuth() {
+    try {
+      google.accounts.id.initialize({
+        client_id: this.CLIENT_ID,
+        callback: (response: any) => {
+          console.log('Token recibido:', response.credential);
+        },
+      });
+      console.log('Inicialización de Google Auth completada con éxito');
+    } catch (error) {
+      console.error('Error al inicializar Google Auth:', error);
+    }
 
-    google.accounts.id.prompt(); // Lanza el diálogo de autenticación
+    // Muestra el popup
+    google.accounts.id.prompt();
   }
 }
