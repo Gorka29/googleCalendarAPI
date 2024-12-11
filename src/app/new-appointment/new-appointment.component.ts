@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GoogleCalendarService } from '../services/google-calendar.service';
+import { CommonModule } from '@angular/common';
 
 declare var createGoogleEvent: any;
 
@@ -17,13 +18,15 @@ declare global {
 @Component({
   selector: 'app-new-appointment',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './new-appointment.component.html',
   styleUrl: './new-appointment.component.scss'
 })
 export class NewAppointmentComponent {
 
   eventForm: FormGroup;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -38,17 +41,20 @@ export class NewAppointmentComponent {
   }
 
   async addEvent() {
+    this.successMessage = '';
+    this.errorMessage = '';
+
     const formValues = this.eventForm.value;
     const event = {
       summary: formValues.summary,
       description: formValues.description,
       start: {
         dateTime: new Date(formValues.start).toISOString(),
-        timeZone: 'America/Los_Angeles',
+        timeZone: 'Europe/Madrid',
       },
       end: {
         dateTime: new Date(formValues.end).toISOString(),
-        timeZone: 'America/Los_Angeles',
+        timeZone: 'Europe/Madrid',
       },
     };
 
@@ -57,8 +63,10 @@ export class NewAppointmentComponent {
       await this.googleCalendarService.signIn();
       const response = await this.googleCalendarService.addEvent(event);
       console.log('Evento creado:', response);
-    } catch (error) {
+      this.successMessage = `Evento creado: ${response.summary}`;
+    } catch (error: any) {
       console.error('Error al crear el evento:', error);
+      this.errorMessage = `Error al crear el evento: ${error.message}`;
     }
   }
 
