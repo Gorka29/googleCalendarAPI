@@ -4,16 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { GoogleCalendarService } from '../services/google-calendar.service';
 import { CommonModule } from '@angular/common';
 
-declare var createGoogleEvent: any;
-
-// Declara la función global
-declare global {
-  interface Window {
-    gapiLoaded: () => void;
-    gisLoaded: () => void;
-    createGoogleEvent: (eventDetails: any) => void;
-  }
-}
 
 @Component({
   selector: 'app-new-appointment',
@@ -24,50 +14,15 @@ declare global {
 })
 export class NewAppointmentComponent {
 
-  eventForm: FormGroup;
-  successMessage: string = '';
-  errorMessage: string = '';
+  events: any[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private googleCalendarService: GoogleCalendarService
-  ) {
-    this.eventForm = this.fb.group({
-      summary: [''],
-      description: [''],
-      start: [''],
-      end: [''],
+  constructor(private googleService: GoogleCalendarService) {}
+
+  connectToGoogle() {
+    this.googleService.initializeGoogleAuth((token) => {
+      console.log('Token recibido:', token);
+      // Aquí puedes llamar a tus APIs con el token recibido.
     });
-  }
-
-  async addEvent() {
-    this.successMessage = '';
-    this.errorMessage = '';
-
-    const formValues = this.eventForm.value;
-    const event = {
-      summary: formValues.summary,
-      description: formValues.description,
-      start: {
-        dateTime: new Date(formValues.start).toISOString(),
-        timeZone: 'Europe/Madrid',
-      },
-      end: {
-        dateTime: new Date(formValues.end).toISOString(),
-        timeZone: 'Europe/Madrid',
-      },
-    };
-
-    try {
-      await this.googleCalendarService.initGoogleAuth();
-      await this.googleCalendarService.signIn();
-      const response = await this.googleCalendarService.addEvent(event);
-      console.log('Evento creado:', response);
-      this.successMessage = `Evento creado: ${response.summary}`;
-    } catch (error: any) {
-      console.error('Error al crear el evento:', error);
-      this.errorMessage = `Error al crear el evento: ${error.message}`;
-    }
   }
 
 }
