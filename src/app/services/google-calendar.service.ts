@@ -37,8 +37,8 @@ export class GoogleCalendarService {
       window.gapi.load('client:auth2', () => {
         window.gapi.client
           .init({
-            apiKey: this.API_KEY,
-            clientId: this.CLIENT_ID,
+            apiKey: 'AIzaSyAMEIgjG5FQwfwgfRMnG52HdfVzpIO7BRU',
+            clientId: '776163066585-8lkr6dr5rgm1ick3p6i5cqcu4b5l6bbq.apps.googleusercontent.com',
             discoveryDocs: this.DISCOVERY_DOCS,
             scope: this.SCOPES,
           })
@@ -54,7 +54,7 @@ export class GoogleCalendarService {
         window.gapi.load('auth2', () => {
           window.gapi.auth2
             .init({
-              client_id: this.CLIENT_ID,
+              client_id: '776163066585-8lkr6dr5rgm1ick3p6i5cqcu4b5l6bbq.apps.googleusercontent.com',
             })
             .then(() => resolve())
             .catch((err: any) => reject(err));
@@ -73,7 +73,7 @@ export class GoogleCalendarService {
       window.gapi.load('auth2', () => {
         window.gapi.auth2
           .init({
-            client_id: this.CLIENT_ID,
+            client_id: '776163066585-8lkr6dr5rgm1ick3p6i5cqcu4b5l6bbq.apps.googleusercontent.com',
           })
           .then(() => resolve())
           .catch((err: any) => reject(err));
