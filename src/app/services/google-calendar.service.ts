@@ -6,7 +6,7 @@ declare const google: any; // Para Google Identity Services
   providedIn: 'root',
 })
 export class GoogleCalendarService {
-  private CLIENT_ID = '776163066585-8lkr6dr5rgm1ick3p6i5cqcu4b5l6bbq.apps.googleusercontent.com';
+  private CLIENT_ID = '776163066585-hk0eirmivm5865kcbn3s19a15ugsj6ro.apps.googleusercontent.com';
   private token: string = '';
 
   constructor() {}
