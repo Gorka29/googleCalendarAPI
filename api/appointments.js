@@ -4,14 +4,24 @@ require('dotenv').config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, // Necesario en Vercel con PostgreSQL
+  ssl: { rejectUnauthorized: false },
 });
 
 module.exports = async (req, res) => {
+  // Configurar CORS
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Permitir cualquier origen
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Preflight request para OPTIONS
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   const { method } = req;
 
   switch (method) {
-    case 'GET': // Obtener todos los appointments
+    case 'GET': // Obtener todas las citas
       try {
         const result = await pool.query('SELECT * FROM appointments');
         res.status(200).json(result.rows);
@@ -21,7 +31,7 @@ module.exports = async (req, res) => {
       }
       break;
 
-    case 'POST': // Insertar una nueva cita
+    case 'POST': // Crear una cita
       const { name, description, startdate, enddate } = req.body;
 
       if (!name || !description || !startdate || !enddate) {
@@ -42,7 +52,7 @@ module.exports = async (req, res) => {
       break;
 
     default:
-      res.setHeader('Allow', ['GET', 'POST']);
+      res.setHeader('Allow', ['GET', 'POST', 'OPTIONS']);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
