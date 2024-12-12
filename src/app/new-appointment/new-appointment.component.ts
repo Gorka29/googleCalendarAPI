@@ -34,26 +34,13 @@ export class NewAppointmentComponent {
   }
 
   signIn() {
-    this.authService.loginPopup().subscribe({
-      next: (response) => {
-        console.log('Inicio de sesión exitoso:', response);
-        this.authService.instance.setActiveAccount(response.account);
-        this.checkAccount();
-        this.getCalendarEvents();
-      },
-      error: (err) => console.error('Error en el inicio de sesión:', err),
-    });
+    console.log('Redirigiendo al inicio de sesión...');
+    this.authService.loginRedirect();
   }
 
   signOut() {
-    this.authService.logoutPopup().subscribe({
-      next: () => {
-        console.log('Cierre de sesión exitoso');
-        this.isLoggedIn = false;
-        this.userName = '';
-      },
-      error: (err) => console.error('Error en el cierre de sesión:', err)
-    });
+    console.log('Redirigiendo al cierre de sesión...');
+    this.authService.logoutRedirect();
   }
 
   getCalendarEvents() {
