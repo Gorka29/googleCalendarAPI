@@ -1,4 +1,3 @@
-// api/appointments.js
 const { Pool } = require('pg');
 require('dotenv').config();
 
@@ -13,46 +12,41 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Preflight request para OPTIONS
+  // Responder a preflight request (OPTIONS)
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
   const { method } = req;
 
-  switch (method) {
-    case 'GET': // Obtener todas las citas
-      try {
+  try {
+    switch (method) {
+      case 'GET': {
         const result = await pool.query('SELECT * FROM appointments');
-        res.status(200).json(result.rows);
-      } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error al obtener las citas' });
-      }
-      break;
-
-    case 'POST': // Crear una cita
-      const { name, description, startdate, enddate } = req.body;
-
-      if (!name || !description || !startdate || !enddate) {
-        res.status(400).json({ error: 'Faltan campos requeridos' });
-        return;
+        return res.status(200).json(result.rows);
       }
 
-      try {
+      case 'POST': {
+        const { name, description, startdate, enddate } = req.body;
+
+        if (!name || !description || !startdate || !enddate) {
+          return res.status(400).json({ error: 'Missing required fields' });
+        }
+
         const result = await pool.query(
           'INSERT INTO appointments (name, description, startdate, enddate) VALUES ($1, $2, $3, $4) RETURNING *',
           [name, description, startdate, enddate]
         );
-        res.status(201).json(result.rows[0]);
-      } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error al insertar la cita' });
+        return res.status(201).json(result.rows[0]);
       }
-      break;
 
-    default:
-      res.setHeader('Allow', ['GET', 'POST', 'OPTIONS']);
-      res.status(405).end(`Method ${method} Not Allowed`);
+      default: {
+        res.setHeader('Allow', ['GET', 'POST', 'OPTIONS']);
+        return res.status(405).end(`Method ${method} Not Allowed`);
+      }
+    }
+  } catch (err) {
+    console.error('Error en la API:', err);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
