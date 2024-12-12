@@ -1,20 +1,60 @@
-<button
-  (click)="connectToGoogle()"
-  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center gap-2"
->
-  <i class="fab fa-google"></i>
-  Conectar con Google
-</button>
+<div class="flex flex-col items-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-4xl mx-auto px-4">
+    <!-- Encabezado con título -->
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Calendario de Outlook</h1>
 
-<div *ngIf="events.length > 0" class="mt-8">
-  <h3 class="text-2xl font-semibold text-gray-800 mb-4">Citas Disponibles:</h3>
-  <ul class="space-y-3">
-    <li *ngFor="let event of events"
-        class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow duration-200 border border-gray-200">
-      <div class="flex items-center justify-between">
-        <span class="text-gray-700">{{ event.summary }}</span>
-        <span class="text-sm text-gray-500">{{ event.start.dateTime || event.start.date }}</span>
+    <!-- Barra superior con estado de sesión y botones -->
+    <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md mb-8">
+      <!-- Estado de la sesión -->
+      <div>
+        <div *ngIf="isLoggedIn" class="text-green-600 font-medium">
+          <p>Sesión iniciada como: {{userName}}</p>
+        </div>
+        <div *ngIf="!isLoggedIn" class="text-red-600 font-medium">
+          <p>No has iniciado sesión</p>
+        </div>
       </div>
-    </li>
-  </ul>
+
+      <!-- Botones de sesión -->
+      <div>
+        <button *ngIf="!isLoggedIn"
+                class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition duration-300"
+                (click)="signIn()">
+          Iniciar sesión con Outlook
+        </button>
+
+        <button *ngIf="isLoggedIn"
+                class="px-6 py-2 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 transition duration-300"
+                (click)="signOut()">
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <!-- Sección de eventos -->
+      <div *ngIf="isLoggedIn">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">Eventos del Calendario</h3>
+
+        <!-- Lista de eventos -->
+        <div *ngIf="events && events.length > 0" class="space-y-4">
+          <div *ngFor="let event of events"
+               class="bg-gray-50 p-4 rounded-lg border border-gray-200 hover:shadow-md transition duration-300">
+            <h4 class="text-xl font-semibold text-gray-800 mb-2">{{event.subject}}</h4>
+            <div class="grid grid-cols-2 gap-4">
+              <p class="text-gray-600"><span class="font-medium">Inicio:</span> {{event.start | date:'short'}}</p>
+              <p class="text-gray-600"><span class="font-medium">Fin:</span> {{event.end | date:'short'}}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensaje sin eventos -->
+        <div *ngIf="events && events.length === 0"
+             class="text-center py-8 text-gray-600">
+          <p class="text-lg">No hay eventos programados</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
