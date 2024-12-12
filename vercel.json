@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/appointments.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
